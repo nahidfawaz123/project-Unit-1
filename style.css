@@ -1,3 +1,6 @@
+
+@import url("https://fonts.googleapis.com/css2?family=Rubik&display=swap");
+
 span{
     padding: 0.25rem 0.5rem;
     border-radius: 3px;
@@ -16,11 +19,30 @@ span{
   max-height: 550px !important;
 
   }
-  @media (min-width: 768px) { 
-    .container-fluid{
-        
-    }
+ 
+   #tags{
+     width: 80%;
+     display: flex;
+     flex-wrap: wrap;
+     justify-content: center;
+     align-items: center;
+     margin: 10px auto;
    }
+   .tag{
+     color:white;
+     padding: 10px 15px;
+     background-color:#df4759;
+     border-radius: 50px;
+     margin: 5px;
+     display: inline-block;
+     cursor: pointer;
+     
+   }
+   .tag.highlight{
+    background-color:black;
+    color: aliceblue;
+}
+
 
   
 

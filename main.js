@@ -2,10 +2,9 @@ const API_KAY="api_key=9c2a03cd716c14cec0e167b5657f23be";
 const BASE_URL= "https://api.themoviedb.org/3";
 const API_URL =BASE_URL + "/discover/movie?sort_by=popularity.desc&"+API_KAY;
 const IMG_URL ="https://image.tmdb.org/t/p/w500"
-const searchURL =BASE_URL +"/search/movie?"+API_KAY;
+const searchURL =BASE_URL +"/search/movie?"+API_KAY; 
+
 getMovies(API_URL);
-
-
 
 function getMovies(url){
     fetch(url).then(res=>res.json()).then(data=> {
@@ -15,6 +14,134 @@ function getMovies(url){
     })
     
 }
+
+const genres= [
+    {
+        "id": 28,
+        "name": "Action"
+      },
+      {
+        "id": 12,
+        "name": "Adventure"
+      },
+      {
+        "id": 16,
+        "name": "Animation"
+      },
+      {
+        "id": 35,
+        "name": "Comedy"
+      },
+      {
+        "id": 80,
+        "name": "Crime"
+      },
+      {
+        "id": 99,
+        "name": "Documentary"
+      },
+      {
+        "id": 18,
+        "name": "Drama"
+      },
+      {
+        "id": 10751,
+        "name": "Family"
+      },
+      {
+        "id": 14,
+        "name": "Fantasy"
+      },
+      {
+        "id": 36,
+        "name": "History"
+      },
+      {
+        "id": 27,
+        "name": "Horror"
+      },
+      {
+        "id": 10402,
+        "name": "Music"
+      },
+      {
+        "id": 9648,
+        "name": "Mystery"
+      },
+      {
+        "id": 10749,
+        "name": "Romance"
+      },
+      {
+        "id": 878,
+        "name": "Science Fiction"
+      },
+      {
+        "id": 10770,
+        "name": "TV Movie"
+      },
+      {
+        "id": 53,
+        "name": "Thriller"
+      },
+      {
+        "id": 10752,
+        "name": "War"
+      },
+      {
+        "id": 37,
+        "name": "Western"
+      }
+
+]
+const tagEl = document.getElementById('tags')
+let selectedGenre = []
+setGenre();
+function setGenre() {
+    tagEl.innerHTML= '';
+    genres.forEach(genre => {
+        const genreDiv = document.createElement('div');
+        genreDiv.classList.add('tag');
+        genreDiv.id=genre.id;
+        genreDiv.innerText = genre.name;
+        genreDiv.addEventListener('click', () => {
+            if(selectedGenre.length == 0){
+                selectedGenre.push(genre.id);
+            }else{
+                if(selectedGenre.includes(genre.id)){
+                    selectedGenre.forEach((id, idx) => {
+                        if(id == genre.id){
+                            selectedGenre.splice(idx, 1);
+                        }
+                    })
+                }else{
+                    selectedGenre.push(genre.id);
+                }
+            }
+            console.log(selectedGenre)
+            getMovies(API_URL + '&with_genres='+encodeURI(selectedGenre.join(',')))
+            highlightSelection()
+
+        })
+        tagEl.append(genreDiv);
+    })
+}
+function highlightSelection() {
+    const tags = document.querySelectorAll('.tag');
+    tags.forEach(tag => {
+        tag.classList.remove('highlight')
+    })
+    if(selectedGenre.length !=0){   
+        selectedGenre.forEach(id => {
+            const hightlightedTag = document.getElementById(id);
+            hightlightedTag.classList.add('highlight');
+        })
+    }
+
+}
+
+
+
 
 function showMovies(data){
     const moviesEl = document.querySelector('.movies') ;
@@ -30,12 +157,12 @@ function showMovies(data){
             src=IMG_URL+data[i].poster_path;
 
         }
-        movie.innerHTML= `     
-        <img class="card-img-top " src="${src}" alt="${data[i].title}">
+        movie.innerHTML= `  
+        <img class="card-img-top " src="${src}" style="height: 400px" alt="${data[i].title}">
         <div class="card-body">
-        <h5 class="card-title d-flex justify-content-between ">${data[i].title} <span>${data[i].vote_average}</span></h5>
+        <h5 class="card-title d-flex justify-content-between ">${data[i].title} <span><br>${data[i].vote_average}</span></h5>
         
-        <button type="button" class="btn-outline-danger btn-lg btn-block " data-toggle="modal" data-target="#target${i}">Details</button>
+        <button type="button" class="btn-outline-danger btn-lg btn-block " style="padding: 1.25em; margin-top: 3px;"data-toggle="modal" data-target="#target${i}">Details</button>
         
         
         <div class="modal fade bd-example-modal-lx " id ='target${i}' tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -75,52 +202,4 @@ function showMovies(data){
         }
         
     })
-
-   
-
-    function users(){
-        let users = JSON.parse(localStorage.getItem('Users')) || [];
-        let Userdata = {
-            rUsername:document.getElementById("rUsername").value,
-            rPassword:document.getElementById("rPassword").value};
-        users.push(Userdata);
-        localStorage.setItem('Users', JSON.stringify(users));
-        window.location.reload();
-    }
-
-    function check() {
-        let users=[];
-        let username=document.getElementById("username").value;
-        let password =document.getElementById("password").value;
-         users = JSON.parse(localStorage.getItem('Users')) ;
-        console.log(users.length);
-            for (let i = 0; i < users.length; i++) {
-                // console.log(username);
-                // console.log(password);
-                // console.log(users[i].rUsername);
-                // console.log(users[i].rPassword);
-         if(username !== users[i].rUsername && password !== users[i].rPassword) {
-
-            alert('ERROR');
-        }else {
-             alert('You are loged in.');
-             const logIn =document.querySelector('#login');
-             logIn.style.display='none'
-            //  logIn.innerText=username
-
-           const logUser=document.querySelector('.logUser');
-            const but=document.createElement("button");
-            but.innerText=username;
-            logUser.append(but)
-            
-
-            
-         }
-        
-    } 
-}  
- 
-
-
-
 
